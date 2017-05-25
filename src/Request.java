@@ -17,6 +17,9 @@ public class Request {
 
                 method = parse.nextToken().toUpperCase();
                 file = parse.nextToken().toLowerCase();
+            } else {
+                method = "GET";
+                file = "/";
             }
         } catch (NoSuchElementException e) {
             System.err.println("Error : " + e.getMessage());

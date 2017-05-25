@@ -15,9 +15,6 @@ public class Client
     private int port;
     private Socket socket;
 
-        //String adr = "192.168.0.1";
-        //int port = 80;
-
 
     public Client() {
 
