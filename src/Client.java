@@ -13,6 +13,7 @@ public class Client
 {
     private String adr;
     private int port;
+    private String url;
     private Socket socket;
 
 
@@ -24,6 +25,7 @@ public class Client
         Client client = new Client();
         client.readAdr();
         client.readPort();
+        client.readUrl();
 
         try{
             client.socket = new Socket(InetAddress.getByName(client.adr), client.port);
@@ -38,7 +40,7 @@ public class Client
         } catch (IOException e) {
             e.printStackTrace();
         }
-        pw.println("GET / HTTP/1.1 \r\n\r\n");
+        pw.println("GET " + client.url + " HTTP/1.1 \r\n\r\n");
         pw.flush();
         BufferedReader br = null;
         try {
@@ -64,6 +66,12 @@ public class Client
 
     }
 
+    private void readUrl() {
+        Scanner  sc = new Scanner(System.in);
+        System.out.println("Enter the url requested");
+        url = sc.nextLine();
+    }
+
     public String getAdr() {
         return adr;
     }
@@ -82,18 +90,15 @@ public class Client
 
     public void readAdr(){
         System.out.println("Enter the Host's IP Address");
-        String adr;
+
         Scanner S=new Scanner(System.in);
         adr=S.nextLine();
-        this.adr=adr;
     }
 
     public void readPort(){
         System.out.println("Enter the Host's Port");
-        int port;
         Scanner S=new Scanner(System.in);
         port=S.nextInt();
-        this.port=port;
     }
 
 
