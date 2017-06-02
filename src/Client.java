@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -16,6 +17,7 @@ public class Client
     private String url;
     private Socket socket;
 
+    private Map<String, String> cookies;
 
     public Client() {
 
@@ -29,39 +31,22 @@ public class Client
 
         try{
             client.socket = new Socket(InetAddress.getByName(client.adr), client.port);
+            PrintWriter pw;
+            pw = new PrintWriter(client.socket.getOutputStream());
+            pw.println("GET " + client.url + " HTTP/1.1");
+            pw.flush();
+
+
+            BufferedReader br;
+            br = new BufferedReader(new InputStreamReader(client.socket.getInputStream()));
+            String t;
+            while ((t = br.readLine()) != null) System.out.println(t);
+
+            br.close();
         }
         catch (IOException e){
             System.err.println("Impossible de se connecter à l'adresse " + client.adr + ":" + client.port + " : " + e.getMessage());
         }
-
-        PrintWriter pw = null;
-        try {
-            pw = new PrintWriter(client.socket.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        pw.println("GET " + client.url + " HTTP/1.1 \r\n\r\n");
-        pw.flush();
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(new InputStreamReader(client.socket.getInputStream()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String t;
-
-        try {
-            while ((t = br.readLine()) != null) System.out.println(t);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            br.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
 
 
     }

@@ -4,6 +4,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Irindul on 24/05/2017.
@@ -74,7 +75,14 @@ public class Connection implements Runnable{
 
             String req = in.readLine();
             Request request = new Request(req);
+            StringBuilder sb = new StringBuilder();
 
+            String line;
+            while( (line = in.readLine() )!= null)
+                sb.append(line);
+
+            System.out.println("Done reading");
+            request.setCookies(sb.toString());
             if(request.getMethod().equals("GET")){
                 get(in, request);
             } else {
@@ -157,6 +165,8 @@ public class Connection implements Runnable{
         File file = new File(ROOT, request.getFile());
         System.out.println("Requested : " + file.getAbsolutePath());
 
+        readCookies(request);
+
         byte[] fileData = new byte[(int) file.length()];
         try{
             FileInputStream fis = new FileInputStream(file);
@@ -169,7 +179,8 @@ public class Connection implements Runnable{
             httpHeader(200);
             out.println("Content-Type: "+ getContentType(request.getFile()));
             out.println("Content-length: " + fileData.length);
-            out.println(); // Extra ligne in the header (mandatory)
+            out.println("Set-Cookie: ref=1234; Expires=Wed, 21 Oct 2017 07:28:00 GMT;"); //Arbitrary cookie
+            out.println(); // Extra line in the header (mandatory)
             out.flush();
 
 
@@ -184,6 +195,14 @@ public class Connection implements Runnable{
 
         } catch (IOException ex) {
             writeError(500);
+        }
+    }
+
+    private void readCookies(Request request) {
+
+        Map<String, String> cookies = request.getCookies();
+        if(cookies != null){
+            cookies.forEach((key, value) -> System.out.println("Cookie was sent from client: " + key + " set to" + value));
         }
     }
 }
