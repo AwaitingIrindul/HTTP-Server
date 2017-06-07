@@ -34,7 +34,7 @@ public class Request {
         StringTokenizer parse = new StringTokenizer(line);
         while(parse.hasMoreTokens()){
             String s = parse.nextToken();
-            if(s.equals("Cookie:")){
+            if("Cookie:".equals(s)){
                 if(cookies == null)
                     cookies = new HashMap<>();
                 String cookie = parse.nextToken();

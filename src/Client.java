@@ -45,14 +45,18 @@ public class Client implements Runnable {
             BufferedReader br;
             br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String line;
+
+            //Reading header
             StringBuilder sb = new StringBuilder();
             while ((line = br.readLine()) != null && line.length() > 0) {
                 sb.append(line).append("\n");
             }
             String header = sb.toString();
             parseHeader(header);
-            sb = new StringBuilder();
+            view.notifyHeader(header);
 
+            //Reading content
+            sb = new StringBuilder();
             while ((line = br.readLine()) != null && line.length() > 0) {
                 sb.append(line).append("\n");
             }

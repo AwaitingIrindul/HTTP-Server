@@ -4,6 +4,7 @@
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.StringTokenizer;
 
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -87,6 +88,24 @@ public class Controller extends VBox implements View {
             WebEngine engine = webView.getEngine();
             engine.loadContent(result);
         });
+
+    }
+
+    @Override
+    public void notifyHeader(String header) {
+        StringTokenizer tokenizer = new StringTokenizer(header);
+        while(tokenizer.hasMoreTokens()){
+            String s = tokenizer.nextToken();
+            if("Content-Type:".equals(s)){
+                String type = tokenizer.nextToken();
+                if(type.contains("image")){
+                    //render imageview rather than webview
+                    webView.setVisible(false);
+                } else {
+                    webView.setVisible(true);
+                }
+            }
+        }
 
     }
 }

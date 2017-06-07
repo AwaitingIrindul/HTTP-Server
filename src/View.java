@@ -5,4 +5,5 @@ public interface View {
 
     void notifyError();
     void notifySuccess(String result);
+    void notifyHeader(String header);
 }
