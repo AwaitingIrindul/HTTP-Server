@@ -5,5 +5,6 @@ public interface View {
 
     void notifyError();
     void notifySuccess(String result);
-    void notifyHeader(String header);
+    void notifyHeader(boolean image);
+    void notifySuccess(byte[] result);
 }

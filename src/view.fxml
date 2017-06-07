@@ -17,14 +17,17 @@
                   <TextField fx:id="IP" alignment="CENTER" prefHeight="51.0" prefWidth="181.0" text="127.0.0.1" />
                   <TextField fx:id="Port" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="51.0" prefWidth="183.0" text="8080" />
                   <TextField fx:id="URL" alignment="CENTER" layoutX="110.0" layoutY="10.0" prefHeight="51.0" prefWidth="248.0" text="/" />
-                  <Button fx:id="search" mnemonicParsing="false" onAction="#search" prefHeight="51.0" prefWidth="83.0" text="O" />
+                  <Button fx:id="search" mnemonicParsing="false" onAction="#search" prefHeight="51.0" prefWidth="83.0" text="Ok" />
                </children>
             </HBox>
          </top>
          <center>
+
             <WebView fx:id="webView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" visible="true"/>
-            <ImageView fx:id="imageView" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" visible="false"/>
          </center>
+         <bottom>
+            <ImageView fx:id="imageView" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" visible="true"/>
+         </bottom>
       </BorderPane>
    </children>
 </AnchorPane>

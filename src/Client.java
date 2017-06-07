@@ -1,13 +1,10 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 /**
  * Created by Shauny on 24-May-17.
@@ -19,12 +16,11 @@ public class Client implements Runnable {
     private Socket socket;
     private View view;
 
-    private Map<String, String> cookies;
     private CookieHandler cookieHandler;
+    private boolean image;
 
     public Client(View view) {
         this.view = view;
-        cookies = new HashMap<>();
         cookieHandler = new CookieHandlerClient();
     }
 
@@ -48,43 +44,81 @@ public class Client implements Runnable {
 
             //Reading header
             StringBuilder sb = new StringBuilder();
+
+            int j = 0;
             while ((line = br.readLine()) != null && line.length() > 0) {
                 sb.append(line).append("\n");
             }
             String header = sb.toString();
             cookieHandler.store(header);
-            //parseHeader(header);
-            view.notifyHeader(header);
 
-            //Reading content
-            sb = new StringBuilder();
-            while ((line = br.readLine()) != null && line.length() > 0) {
-                sb.append(line).append("\n");
+            int length = parseHeader(header);
+            view.notifyHeader(image);
+           // br.close();
+            //Reading content according to type
+            if(image){
+                byte[] bytes = new byte[length];
+                System.out.println(length);
+               /* int c;
+                int i = 0;
+                while( (c = br.read()) >= 0){
+                    bytes[i++] = (byte) c;
+                }*/
+
+               // System.out.println(Arrays.toString(bytes));
+                if(url.startsWith("/")){
+                    url = url.substring(1);
+                }
+
+               InputStream inputStream = socket.getInputStream();
+               inputStream.read(bytes);
+               System.out.println(Arrays.toString(bytes));
+
+                File file = new File(url);
+                file.getParentFile().mkdirs();
+
+                FileOutputStream fos =  new FileOutputStream(file);
+                fos.write(bytes);
+
+                inputStream.close();
+                fos.close();
+
+                view.notifySuccess(bytes);
+            } else {
+                sb = new StringBuilder();
+                while ((line = br.readLine()) != null && line.length() > 0) {
+                    sb.append(line).append("\n");
+                }
+                view.notifySuccess(sb.toString());
             }
 
-            view.notifySuccess(sb.toString());
 
-            br.close();
+
+           // br.close();
+            pw.close();
         } catch (IOException e) {
             view.notifyError();
-            System.err.println("Impossible de se connecter à l'adresse " + adr + ":" + port + " : " + e.getMessage());
+            System.err.println("Impossible de se connecter à l'adresse " + adr + ":" + port + " : ");
+            e.printStackTrace();
         }
 
 
     }
 
-    // TODO: 07/06/2017 Refactor in static class CookieHandler.
-    private void parseHeader(String header) {
+    private int parseHeader(String header) {
         StringTokenizer parse = new StringTokenizer(header);
         while (parse.hasMoreTokens()) {
             String s = parse.nextToken();
-            if (s.equals("Set-Cookie:")) {
-                if (cookies == null)
-                    cookies = new HashMap<>();
-                String cookie = parse.nextToken();
-                cookies.put(cookie.split("=")[0], cookie.split("=")[1]);
+            if ("Content-Type:".equals(s)) {
+                String type = parse.nextToken();
+                image = type.contains("image");
+            }
+            if("Content-length:".equals(s)){
+                String lengthString = parse.nextToken();
+                return Integer.parseInt(lengthString);
             }
         }
+        return 0;
     }
 
     private void readUrl() {

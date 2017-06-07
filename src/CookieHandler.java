@@ -1,4 +1,6 @@
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
@@ -33,11 +35,18 @@ public class CookieHandler {
 
     public String parse(){
         StringBuilder sb = new StringBuilder();
-        cookies.forEach((key, value) -> sb.append(type())
-                .append(key)
-                .append("=")
-                .append(value)
-                .append("\n"));
+        Iterator<Map.Entry<String, String>> it = cookies.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry<String, String> entry = it.next();
+            sb.append(type())
+                    .append(entry.getKey())
+                    .append("=")
+                    .append(entry.getValue());
+            if(it.hasNext()){
+                sb.append("\n");
+            }
+
+        }
 
         return sb.toString();
     }

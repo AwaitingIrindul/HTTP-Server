@@ -2,24 +2,22 @@
  * Created by Shauny on 31-May-17.
  */
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.StringTokenizer;
 
 import javafx.application.Platform;
-import javafx.event.EventHandler;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
+
+import javax.imageio.ImageIO;
 
 public class Controller extends VBox implements View {
     private Stage stage;
@@ -36,6 +34,7 @@ public class Controller extends VBox implements View {
     public TextField URL;
     @FXML
     public WebView webView;
+
     @FXML
     public ImageView imageView;
 
@@ -89,37 +88,40 @@ public class Controller extends VBox implements View {
 
     @Override
     public void notifySuccess(String result) {
-        if(isImage){
-            imageView.setImage(new Image(result));
-        }
-        else {
+
             Platform.runLater(() -> {
                 WebEngine engine = webView.getEngine();
                 engine.loadContent(result);
             });
-        }
+
 
     }
 
     @Override
-    public void notifyHeader(String header) {
-        StringTokenizer tokenizer = new StringTokenizer(header);
+    public void notifyHeader(boolean image) {
+       /* StringTokenizer tokenizer = new StringTokenizer(header);
         while(tokenizer.hasMoreTokens()){
             String s = tokenizer.nextToken();
             if("Content-Type:".equals(s)){
                 String type = tokenizer.nextToken();
-                if(type.contains("image")){
-                    isImage=true;
-                    //render imageview rather than webview
-                    webView.setVisible(!isImage);
-                    imageView.setVisible(isImage);
-                } else {
-                    isImage=false;
-                    webView.setVisible(isImage);
-                    imageView.setVisible(!isImage);
-                }
-            }
-        }
+                isImage = type.contains("image");
+            } */
 
+            //render imageview rather than webview
+           // webView.setVisible(!image);
+            //imageView.setVisible(image);
+
+    }
+
+    @Override
+    public void notifySuccess(byte[] result) {
+        try{
+            ByteArrayInputStream in = new ByteArrayInputStream(result);
+            BufferedImage read = ImageIO.read(in);
+            imageView.setImage(SwingFXUtils.toFXImage(read, null));
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }

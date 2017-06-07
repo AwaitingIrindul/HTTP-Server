@@ -2,6 +2,8 @@ import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -177,12 +179,13 @@ public class Connection implements Runnable{
 
         byte[] fileData = new byte[(int) file.length()];
         try{
-            FileInputStream fis = new FileInputStream(file);
 
+            FileInputStream fis = new FileInputStream(file);
             //Filling fileData with the content of the file
             fis.read(fileData);
 
             close(fis); //Closing stream
+            System.out.println(file.length());
 
             httpHeader(200);
             out.println("Content-Type: "+ getContentType(request.getFile()));
@@ -193,11 +196,14 @@ public class Connection implements Runnable{
             out.flush();
 
 
+            OutputStream outputStream = socket.getOutputStream();
+            Files.copy(file.toPath(), outputStream);
+            outputStream.flush();
             //Sending the file :
-            BufferedOutputStream outData = new BufferedOutputStream(socket.getOutputStream());
-            outData.write(fileData);
-            outData.flush();
-            close(outData);
+            /*BufferedOutputStream outData = new BufferedOutputStream(socket.getOutputStream());
+            outData.write(fileData);*/
+            System.out.println(Arrays.toString(fileData));
+
 
         } catch (FileNotFoundException ex) {
             writeError(404);
