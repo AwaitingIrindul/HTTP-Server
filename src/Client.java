@@ -58,7 +58,6 @@ public class Client implements Runnable {
             //Reading content according to type
             if (image) {
                 byte[] bytes = new byte[length];
-                System.out.println(length);
 
                 if (url.startsWith("/")) {
                     url = url.substring(1);
