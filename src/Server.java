@@ -16,6 +16,7 @@ public class Server implements Runnable {
     public Server(int port) {
         try {
             serverSocket = new ServerSocket(port);
+            System.out.println("Server is opened on port " + port);
         } catch (IOException e) {
             System.out.println("Error when opening socket on " + port + " : " + e.getMessage());
         }
@@ -27,7 +28,7 @@ public class Server implements Runnable {
             try {
                 Socket socket = serverSocket.accept();
 
-                //New connection
+                //New connection handled on a different thread
                 Connection connection = new Connection(socket);
                 new Thread(connection).start();
 

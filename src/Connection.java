@@ -78,10 +78,9 @@ public class Connection implements Runnable{
             StringBuilder sb = new StringBuilder();
 
             String line;
-            while( (line = in.readLine() )!= null)
-                sb.append(line);
-
-            System.out.println("Done reading");
+            while( (line = in.readLine() )!= null && line.length() > 0) {
+                sb.append(line).append("\n");
+            }
             request.setCookies(sb.toString());
             if(request.getMethod().equals("GET")){
                 get(in, request);
@@ -179,7 +178,7 @@ public class Connection implements Runnable{
             httpHeader(200);
             out.println("Content-Type: "+ getContentType(request.getFile()));
             out.println("Content-length: " + fileData.length);
-            out.println("Set-Cookie: ref=1234; Expires=Wed, 21 Oct 2017 07:28:00 GMT;"); //Arbitrary cookie
+            out.println("Set-Cookie: ref=1234"); //Arbitrary cookie
             out.println(); // Extra line in the header (mandatory)
             out.flush();
 
@@ -202,7 +201,8 @@ public class Connection implements Runnable{
 
         Map<String, String> cookies = request.getCookies();
         if(cookies != null){
-            cookies.forEach((key, value) -> System.out.println("Cookie was sent from client: " + key + " set to" + value));
-        }
+            cookies.forEach((key, value) -> System.out.println("Cookie was sent from client: " + key + " set to " + value));
+        } 
+        
     }
 }

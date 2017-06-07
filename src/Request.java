@@ -20,7 +20,7 @@ public class Request {
 
                 method = parse.nextToken().toUpperCase();
                 file = parse.nextToken().toLowerCase();
-
+                cookies = new HashMap<>();
             } else {
                 method = "GET";
                 file = "/";
@@ -38,7 +38,6 @@ public class Request {
                 if(cookies == null)
                     cookies = new HashMap<>();
                 String cookie = parse.nextToken();
-                System.out.println(cookie);
                 cookies.put(cookie.split("=")[0], cookie.split("=")[1]);
             }
         }
