@@ -2,8 +2,11 @@
  * Created by Shauny on 31-May-17.
  */
         import javafx.application.Application;
+        import javafx.event.EventHandler;
         import javafx.fxml.FXMLLoader;
         import javafx.scene.Scene;
+        import javafx.scene.input.KeyCode;
+        import javafx.scene.input.KeyEvent;
         import javafx.scene.layout.AnchorPane;
         import javafx.stage.Stage;
 
@@ -25,6 +28,13 @@ public class Main extends Application {
             controller.setStage(primaryStage);
 
             primaryStage.setScene(new Scene(root));
+
+            primaryStage.getScene().setOnKeyPressed(event -> {
+                if(event.getCode() == KeyCode.ENTER){
+                    controller.search();
+                }
+            });
+
             primaryStage.setTitle("HTTP Client");
             primaryStage.show();
         } catch(Exception e) {

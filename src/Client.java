@@ -34,23 +34,26 @@ public class Client implements Runnable {
             PrintWriter pw;
             pw = new PrintWriter(socket.getOutputStream());
             pw.println("GET " + url + " HTTP/1.1");
-            for(Map.Entry<String, String> entry : cookies.entrySet() ){
+            for (Map.Entry<String, String> entry : cookies.entrySet()) {
                 pw.println("Cookie: " + entry.getKey() + "=" + entry.getValue());
+                System.out.println("Test");
             }
+
+            pw.println();
             pw.flush();
 
             BufferedReader br;
             br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String line;
             StringBuilder sb = new StringBuilder();
-            while ((line = br.readLine()) != null && line.length() > 0){
+            while ((line = br.readLine()) != null && line.length() > 0) {
                 sb.append(line).append("\n");
             }
             String header = sb.toString();
             parseHeader(header);
             sb = new StringBuilder();
 
-            while ((line = br.readLine()) != null && line.length() > 0){
+            while ((line = br.readLine()) != null && line.length() > 0) {
                 sb.append(line).append("\n");
             }
 
@@ -58,6 +61,7 @@ public class Client implements Runnable {
 
             br.close();
         } catch (IOException e) {
+            view.notifyError();
             System.err.println("Impossible de se connecter à l'adresse " + adr + ":" + port + " : " + e.getMessage());
         }
 
@@ -67,10 +71,10 @@ public class Client implements Runnable {
     // TODO: 07/06/2017 Refactor in static class CookieHandler.
     private void parseHeader(String header) {
         StringTokenizer parse = new StringTokenizer(header);
-        while(parse.hasMoreTokens()){
+        while (parse.hasMoreTokens()) {
             String s = parse.nextToken();
-            if(s.equals("Set-Cookie:")){
-                if(cookies == null)
+            if (s.equals("Set-Cookie:")) {
+                if (cookies == null)
                     cookies = new HashMap<>();
                 String cookie = parse.nextToken();
                 cookies.put(cookie.split("=")[0], cookie.split("=")[1]);

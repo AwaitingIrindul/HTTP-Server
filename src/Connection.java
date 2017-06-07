@@ -48,7 +48,7 @@ public class Connection implements Runnable{
         out.println("HTTP/" + HTTP_VERSION + " " + errorCode + " " + errors.get(errorCode));
         out.println("Server: MathieuSimon");
         out.println("Date: " + new Date());
-        out.println("Connection: close");
+        out.println("Connection: keep-alive");
     }
 
     private void writeError(int errorCode) {
@@ -78,10 +78,10 @@ public class Connection implements Runnable{
             StringBuilder sb = new StringBuilder();
 
             String line;
-            /*while( (line = in.readLine() )!= null && line.length() > 0) {
+            while( (line = in.readLine() )!= null && line.length() > 0) {
                 sb.append(line).append("\n");
             }
-            request.setCookies(sb.toString());*/
+            request.setCookies(sb.toString());
 
             if(request.getMethod().equals("GET")){
                 get(in, request);

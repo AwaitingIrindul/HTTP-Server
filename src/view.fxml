@@ -13,9 +13,9 @@
          <top>
             <HBox prefHeight="52.0" prefWidth="600.0" BorderPane.alignment="CENTER">
                <children>
-                  <TextField fx:id="IP" alignment="CENTER" prefHeight="51.0" prefWidth="181.0" text="IP" />
-                  <TextField fx:id="Port" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="51.0" prefWidth="183.0" text="Port" />
-                  <TextField fx:id="URL" alignment="CENTER" layoutX="110.0" layoutY="10.0" prefHeight="51.0" prefWidth="248.0" text="URL" />
+                  <TextField fx:id="IP" alignment="CENTER" prefHeight="51.0" prefWidth="181.0" text="127.0.0.1" />
+                  <TextField fx:id="Port" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="51.0" prefWidth="183.0" text="8080" />
+                  <TextField fx:id="URL" alignment="CENTER" layoutX="110.0" layoutY="10.0" prefHeight="51.0" prefWidth="248.0" text="/" />
                   <Button fx:id="search" mnemonicParsing="false" prefHeight="51.0" prefWidth="83.0" text="O" onAction="#search" />
                </children>
             </HBox>
