@@ -10,8 +10,7 @@ import java.util.Scanner;
 /**
  * Created by Shauny on 24-May-17.
  */
-public class Client
-{
+public class Client implements Runnable{
     private String adr;
     private int port;
     private String url;
@@ -23,29 +22,27 @@ public class Client
 
     }
 
-    public static void run() {
-        Client client = new Client();
-        client.readAdr();
-        client.readPort();
-        client.readUrl();
+    @Override
+    public void run() {
 
         try{
-            client.socket = new Socket(InetAddress.getByName(client.adr), client.port);
+            socket = new Socket(InetAddress.getByName(adr), port);
             PrintWriter pw;
-            pw = new PrintWriter(client.socket.getOutputStream());
-            pw.println("GET " + client.url + " HTTP/1.1");
+            pw = new PrintWriter(socket.getOutputStream());
+            pw.println("GET " + url + " HTTP/1.1");
             pw.flush();
 
 
             BufferedReader br;
-            br = new BufferedReader(new InputStreamReader(client.socket.getInputStream()));
+            br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String t;
-            while ((t = br.readLine()) != null) System.out.println(t);
+            while ((t = br.readLine()) != null && t.length() > 0)
+                System.out.println(t);
 
             br.close();
         }
         catch (IOException e){
-            System.err.println("Impossible de se connecter à l'adresse " + client.adr + ":" + client.port + " : " + e.getMessage());
+            System.err.println("Impossible de se connecter à l'adresse " + adr + ":" + port + " : " + e.getMessage());
         }
 
 
@@ -71,6 +68,14 @@ public class Client
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public void readAdr(){

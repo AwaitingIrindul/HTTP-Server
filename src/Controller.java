@@ -3,6 +3,7 @@
  */
 
 import java.io.IOException;
+import java.text.ParseException;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,10 +14,14 @@ import javafx.stage.Stage;
 
 public class Controller extends VBox {
     private Stage stage;
-    @FXML public Button search;
-    @FXML public TextField IP;
-    @FXML public TextField Port;
-    @FXML public TextField URL;
+    @FXML
+    public Button search;
+    @FXML
+    public TextField IP;
+    @FXML
+    public TextField Port;
+    @FXML
+    public TextField URL;
 
     public Controller() {
 //        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
@@ -50,9 +55,15 @@ public class Controller extends VBox {
 
     @FXML
     protected void search() {
-        if(IP.getText().length()>0 && Port.getText().length()>0 && URL.getText().length()>0)
-        {
-            Client.run();
+        if (IP.getText().length() > 0 && Port.getText().length() > 0 && URL.getText().length() > 0) {
+
+            Client c = new Client();
+            c.setAdr(IP.getText());
+            c.setPort(Integer.parseInt(Port.getText()));
+            c.setUrl(URL.getText());
+            new Thread(c).start();
+
+
         }
     }
 
