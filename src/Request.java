@@ -9,7 +9,7 @@ import java.util.StringTokenizer;
 public class Request {
     private String method;
     private String file;
-    private Map<String, String> cookies;
+    private CookieHandler cookieHandler;
 
     public Request(String line) {
         try {
@@ -20,7 +20,8 @@ public class Request {
 
                 method = parse.nextToken().toUpperCase();
                 file = parse.nextToken().toLowerCase();
-                cookies = new HashMap<>();
+
+                cookieHandler = new CookieHandler();
             } else {
                 method = "GET";
                 file = "/";
@@ -31,16 +32,7 @@ public class Request {
     }
 
     public void setCookies(String line){
-        StringTokenizer parse = new StringTokenizer(line);
-        while(parse.hasMoreTokens()){
-            String s = parse.nextToken();
-            if("Cookie:".equals(s)){
-                if(cookies == null)
-                    cookies = new HashMap<>();
-                String cookie = parse.nextToken();
-                cookies.put(cookie.split("=")[0], cookie.split("=")[1]);
-            }
-        }
+        cookieHandler.store(line);
     }
 
     public String getMethod() {
@@ -60,6 +52,6 @@ public class Request {
     }
 
     public Map<String, String> getCookies() {
-        return cookies;
+        return cookieHandler.getCookies();
     }
 }

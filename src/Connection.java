@@ -12,7 +12,7 @@ import java.util.Map;
 public class Connection implements Runnable{
 
     private final String HTTP_VERSION = "1.1";
-    private final int TIMEOUT = 60000; // timeout after one minute
+    private final int TIMEOUT = 6000; // timeout after one minute
 
 
     private final String ROOT = "/Users/Irindul/Documents/www"; //Root of the sources for the server
@@ -21,12 +21,15 @@ public class Connection implements Runnable{
     private PrintWriter out;
 
     HashMap<Integer, String> errors = new HashMap<>();
+    CookieHandler cookieHandler;
 
     public Connection(Socket socket) {
         this.socket = socket;
         try {
             socket.setSoTimeout(TIMEOUT);
             setErrors();
+            cookieHandler = new CookieHandler();
+            cookieHandler.addCookie("ref", "1234");
         } catch (SocketException e) {
             System.out.println("Socket timed out : " + e.getMessage());
         }
@@ -81,6 +84,7 @@ public class Connection implements Runnable{
             while( (line = in.readLine() )!= null && line.length() > 0) {
                 sb.append(line).append("\n");
             }
+
             request.setCookies(sb.toString());
 
             if(request.getMethod().equals("GET")){
@@ -183,7 +187,8 @@ public class Connection implements Runnable{
             httpHeader(200);
             out.println("Content-Type: "+ getContentType(request.getFile()));
             out.println("Content-length: " + fileData.length);
-            out.println("Set-Cookie: ref=1234"); //Arbitrary cookie
+            //out.println("Set-Cookie: ref=1234"); //Arbitrary cookie
+            out.println(cookieHandler.parse());
             out.println(); // Extra line in the header (mandatory)
             out.flush();
 

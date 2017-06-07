@@ -20,10 +20,12 @@ public class Client implements Runnable {
     private View view;
 
     private Map<String, String> cookies;
+    private CookieHandler cookieHandler;
 
     public Client(View view) {
         this.view = view;
         cookies = new HashMap<>();
+        cookieHandler = new CookieHandlerClient();
     }
 
     @Override
@@ -34,10 +36,8 @@ public class Client implements Runnable {
             PrintWriter pw;
             pw = new PrintWriter(socket.getOutputStream());
             pw.println("GET " + url + " HTTP/1.1");
-            for (Map.Entry<String, String> entry : cookies.entrySet()) {
-                pw.println("Cookie: " + entry.getKey() + "=" + entry.getValue());
-                System.out.println("Cookie sent");
-            }
+
+            pw.println(cookieHandler.parse());
 
             pw.println();
             pw.flush();
@@ -52,7 +52,8 @@ public class Client implements Runnable {
                 sb.append(line).append("\n");
             }
             String header = sb.toString();
-            parseHeader(header);
+            cookieHandler.store(header);
+            //parseHeader(header);
             view.notifyHeader(header);
 
             //Reading content
