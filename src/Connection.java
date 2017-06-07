@@ -78,10 +78,11 @@ public class Connection implements Runnable{
             StringBuilder sb = new StringBuilder();
 
             String line;
-            while( (line = in.readLine() )!= null && line.length() > 0) {
+            /*while( (line = in.readLine() )!= null && line.length() > 0) {
                 sb.append(line).append("\n");
             }
-            request.setCookies(sb.toString());
+            request.setCookies(sb.toString());*/
+
             if(request.getMethod().equals("GET")){
                 get(in, request);
             } else {

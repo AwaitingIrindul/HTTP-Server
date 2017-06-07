@@ -5,15 +5,20 @@
 import java.io.IOException;
 import java.text.ParseException;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
-public class Controller extends VBox {
+public class Controller extends VBox implements View {
     private Stage stage;
+    private Client client;
+
     @FXML
     public Button search;
     @FXML
@@ -22,6 +27,8 @@ public class Controller extends VBox {
     public TextField Port;
     @FXML
     public TextField URL;
+    @FXML
+    public WebView webView;
 
     public Controller() {
 //        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
@@ -34,6 +41,7 @@ public class Controller extends VBox {
 //        } catch (IOException exception) {
 //            throw new RuntimeException(exception);
 //        }
+        client = new Client(this);
     }
 
     public void setStage(Stage stage) {
@@ -57,14 +65,25 @@ public class Controller extends VBox {
     protected void search() {
         if (IP.getText().length() > 0 && Port.getText().length() > 0 && URL.getText().length() > 0) {
 
-            Client c = new Client();
-            c.setAdr(IP.getText());
-            c.setPort(Integer.parseInt(Port.getText()));
-            c.setUrl(URL.getText());
-            new Thread(c).start();
-
+            client.setAdr(IP.getText());
+            client.setPort(Integer.parseInt(Port.getText()));
+            client.setUrl(URL.getText());
+            new Thread(client).start();
 
         }
     }
 
+    @Override
+    public void notifyError() {
+
+    }
+
+    @Override
+    public void notifySuccess(String result) {
+        Platform.runLater(() -> {
+            WebEngine engine = webView.getEngine();
+            engine.loadContent(result);
+        });
+
+    }
 }

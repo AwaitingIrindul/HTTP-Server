@@ -4,52 +4,82 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 /**
  * Created by Shauny on 24-May-17.
  */
-public class Client implements Runnable{
+public class Client implements Runnable {
     private String adr;
     private int port;
     private String url;
     private Socket socket;
+    private View view;
 
     private Map<String, String> cookies;
 
-    public Client() {
-
+    public Client(View view) {
+        this.view = view;
+        cookies = new HashMap<>();
     }
 
     @Override
     public void run() {
 
-        try{
+        try {
             socket = new Socket(InetAddress.getByName(adr), port);
             PrintWriter pw;
             pw = new PrintWriter(socket.getOutputStream());
             pw.println("GET " + url + " HTTP/1.1");
+            for(Map.Entry<String, String> entry : cookies.entrySet() ){
+                pw.println("Cookie: " + entry.getKey() + "=" + entry.getValue());
+            }
             pw.flush();
-
 
             BufferedReader br;
             br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String t;
-            while ((t = br.readLine()) != null && t.length() > 0)
-                System.out.println(t);
+            String line;
+            StringBuilder sb = new StringBuilder();
+            while ((line = br.readLine()) != null && line.length() > 0){
+                sb.append(line).append("\n");
+            }
+            String header = sb.toString();
+            parseHeader(header);
+            sb = new StringBuilder();
+
+            while ((line = br.readLine()) != null && line.length() > 0){
+                sb.append(line).append("\n");
+            }
+
+            view.notifySuccess(sb.toString());
 
             br.close();
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             System.err.println("Impossible de se connecter à l'adresse " + adr + ":" + port + " : " + e.getMessage());
         }
 
 
     }
 
+    // TODO: 07/06/2017 Refactor in static class CookieHandler.
+    private void parseHeader(String header) {
+        StringTokenizer parse = new StringTokenizer(header);
+        while(parse.hasMoreTokens()){
+            String s = parse.nextToken();
+            if(s.equals("Set-Cookie:")){
+                if(cookies == null)
+                    cookies = new HashMap<>();
+                String cookie = parse.nextToken();
+                cookies.put(cookie.split("=")[0], cookie.split("=")[1]);
+            }
+        }
+    }
+
     private void readUrl() {
-        Scanner  sc = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         System.out.println("Enter the url requested");
         url = sc.nextLine();
     }
@@ -78,17 +108,17 @@ public class Client implements Runnable{
         this.url = url;
     }
 
-    public void readAdr(){
+    public void readAdr() {
         System.out.println("Enter the Host's IP Address");
 
-        Scanner S=new Scanner(System.in);
-        adr=S.nextLine();
+        Scanner S = new Scanner(System.in);
+        adr = S.nextLine();
     }
 
-    public void readPort(){
+    public void readPort() {
         System.out.println("Enter the Host's Port");
-        Scanner S=new Scanner(System.in);
-        port=S.nextInt();
+        Scanner S = new Scanner(System.in);
+        port = S.nextInt();
     }
 
 
