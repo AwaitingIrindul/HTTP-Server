@@ -4,7 +4,6 @@
 
 import java.io.IOException;
 
-import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -20,16 +19,16 @@ public class Controller extends VBox {
     @FXML public TextField URL;
 
     public Controller() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
-                "view.fxml"));
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
-
-        try {
-            fxmlLoader.load();
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
+//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
+//                "view.fxml"));
+//        //fxmlLoader.setRoot(this);
+//        //fxmlLoader.setController(this);
+//
+//        try {
+//            fxmlLoader.load();
+//        } catch (IOException exception) {
+//            throw new RuntimeException(exception);
+//        }
     }
 
     public void setStage(Stage stage) {
@@ -53,7 +52,7 @@ public class Controller extends VBox {
     protected void search() {
         if(IP.getText().length()>0 && Port.getText().length()>0 && URL.getText().length()>0)
         {
-            // APPELER LA FCT RUN()
+            Client.run();
         }
     }
 

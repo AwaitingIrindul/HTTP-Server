@@ -4,7 +4,7 @@
         import javafx.application.Application;
         import javafx.fxml.FXMLLoader;
         import javafx.scene.Scene;
-        import javafx.scene.layout.BorderPane;
+        import javafx.scene.layout.AnchorPane;
         import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -17,9 +17,9 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("app.fxml"));
+            loader.setLocation(Main.class.getResource("view.fxml"));
 
-            BorderPane root = loader.load();
+            AnchorPane root = loader.load();
 
             Controller controller = loader.getController();
             controller.setStage(primaryStage);
