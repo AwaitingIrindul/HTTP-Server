@@ -63,7 +63,7 @@ public class Client implements Runnable {
                     url = url.substring(1);
                 }
 
-                BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream());
+                BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream(), length);
                 inputStream.read(bytes);
                 inputStream.close();
                 File file = new File(url);
