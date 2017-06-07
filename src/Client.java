@@ -63,17 +63,26 @@ public class Client implements Runnable {
                     url = url.substring(1);
                 }
 
-                BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream(), length);
-                inputStream.read(bytes);
-                inputStream.close();
-                
-                File file = new File(url);
-                file.getParentFile().mkdirs();
+                try{
+                    BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream(), length);
+                    inputStream.read(bytes);
+                    inputStream.close();
+                } catch (IOException e){
+                    System.out.println(e.getMessage());
+                }
 
-                FileOutputStream fos = new FileOutputStream(file);
-                fos.write(bytes);
+                try{
+                    File file = new File(url);
+                    file.getParentFile().mkdirs();
 
-                fos.close();
+                    FileOutputStream fos = new FileOutputStream(file);
+                    fos.write(bytes);
+
+                    fos.close();
+                } catch (IOException e){
+                    System.out.println(e.getMessage());
+                }
+
 
                 view.notifySuccess(bytes);
             } else {
