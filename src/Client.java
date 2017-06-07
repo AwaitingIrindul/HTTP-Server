@@ -66,13 +66,13 @@ public class Client implements Runnable {
                 BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream(), length);
                 inputStream.read(bytes);
                 inputStream.close();
+                
                 File file = new File(url);
                 file.getParentFile().mkdirs();
 
                 FileOutputStream fos = new FileOutputStream(file);
                 fos.write(bytes);
 
-                inputStream.close();
                 fos.close();
 
                 view.notifySuccess(bytes);
