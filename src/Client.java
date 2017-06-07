@@ -23,7 +23,7 @@ public class Client
 
     }
 
-    public static void main(String[] args) {
+    public static void run() {
         Client client = new Client();
         client.readAdr();
         client.readPort();
