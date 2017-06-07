@@ -185,7 +185,6 @@ public class Connection implements Runnable{
             fis.read(fileData);
 
             close(fis); //Closing stream
-            System.out.println(file.length());
 
             httpHeader(200);
             out.println("Content-Type: "+ getContentType(request.getFile()));
@@ -196,14 +195,12 @@ public class Connection implements Runnable{
             out.flush();
 
 
+            //Sending file
             BufferedOutputStream outputStream = new BufferedOutputStream(socket.getOutputStream(), (int) file.length());
             Files.copy(file.toPath(), outputStream);
             outputStream.flush();
             outputStream.close();
-            //Sending the file :
-            /*BufferedOutputStream outData = new BufferedOutputStream(socket.getOutputStream());
-            outData.write(fileData);*/
-            System.out.println(Arrays.toString(fileData));
+
 
 
         } catch (FileNotFoundException ex) {

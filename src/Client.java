@@ -1,10 +1,9 @@
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.StringTokenizer;
 
 /**
  * Created by Shauny on 24-May-17.
@@ -54,30 +53,24 @@ public class Client implements Runnable {
 
             int length = parseHeader(header);
             view.notifyHeader(image);
-           // br.close();
+
+
             //Reading content according to type
-            if(image){
+            if (image) {
                 byte[] bytes = new byte[length];
                 System.out.println(length);
-               /* int c;
-                int i = 0;
-                while( (c = br.read()) >= 0){
-                    bytes[i++] = (byte) c;
-                }*/
 
-               // System.out.println(Arrays.toString(bytes));
-                if(url.startsWith("/")){
+                if (url.startsWith("/")) {
                     url = url.substring(1);
                 }
 
-               BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream());
-               inputStream.read(bytes);
-               System.out.println(Arrays.toString(bytes));
+                BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream());
+                inputStream.read(bytes);
                 inputStream.close();
                 File file = new File(url);
                 file.getParentFile().mkdirs();
 
-                FileOutputStream fos =  new FileOutputStream(file);
+                FileOutputStream fos = new FileOutputStream(file);
                 fos.write(bytes);
 
                 inputStream.close();
@@ -93,8 +86,7 @@ public class Client implements Runnable {
             }
 
 
-
-           // br.close();
+            br.close();
             pw.close();
         } catch (IOException e) {
             view.notifyError();
@@ -113,7 +105,7 @@ public class Client implements Runnable {
                 String type = parse.nextToken();
                 image = type.contains("image");
             }
-            if("Content-length:".equals(s)){
+            if ("Content-length:".equals(s)) {
                 String lengthString = parse.nextToken();
                 return Integer.parseInt(lengthString);
             }
