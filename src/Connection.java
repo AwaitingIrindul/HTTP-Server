@@ -196,9 +196,10 @@ public class Connection implements Runnable{
             out.flush();
 
 
-            OutputStream outputStream = socket.getOutputStream();
+            BufferedOutputStream outputStream = new BufferedOutputStream(socket.getOutputStream(), (int) file.length());
             Files.copy(file.toPath(), outputStream);
             outputStream.flush();
+            outputStream.close();
             //Sending the file :
             /*BufferedOutputStream outData = new BufferedOutputStream(socket.getOutputStream());
             outData.write(fileData);*/

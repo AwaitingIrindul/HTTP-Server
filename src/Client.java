@@ -70,10 +70,10 @@ public class Client implements Runnable {
                     url = url.substring(1);
                 }
 
-               InputStream inputStream = socket.getInputStream();
+               BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream());
                inputStream.read(bytes);
                System.out.println(Arrays.toString(bytes));
-
+                inputStream.close();
                 File file = new File(url);
                 file.getParentFile().mkdirs();
 
