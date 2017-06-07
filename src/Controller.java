@@ -12,16 +12,19 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import javafx.scene.image.ImageView;
 
 public class Controller extends VBox implements View {
     private Stage stage;
     private Client client;
+    private boolean isImage=false;
 
     @FXML
     public Button search;
@@ -33,6 +36,8 @@ public class Controller extends VBox implements View {
     public TextField URL;
     @FXML
     public WebView webView;
+    @FXML
+    public ImageView imageView;
 
     public Controller() {
 //        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
@@ -84,10 +89,15 @@ public class Controller extends VBox implements View {
 
     @Override
     public void notifySuccess(String result) {
-        Platform.runLater(() -> {
-            WebEngine engine = webView.getEngine();
-            engine.loadContent(result);
-        });
+        if(isImage){
+            imageView.setImage(new Image(result));
+        }
+        else {
+            Platform.runLater(() -> {
+                WebEngine engine = webView.getEngine();
+                engine.loadContent(result);
+            });
+        }
 
     }
 
@@ -99,10 +109,14 @@ public class Controller extends VBox implements View {
             if("Content-Type:".equals(s)){
                 String type = tokenizer.nextToken();
                 if(type.contains("image")){
+                    isImage=true;
                     //render imageview rather than webview
-                    webView.setVisible(false);
+                    webView.setVisible(!isImage);
+                    imageView.setVisible(isImage);
                 } else {
-                    webView.setVisible(true);
+                    isImage=false;
+                    webView.setVisible(isImage);
+                    imageView.setVisible(!isImage);
                 }
             }
         }
