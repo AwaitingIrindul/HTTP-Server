@@ -108,9 +108,8 @@ public class Controller extends VBox implements View {
             } */
 
             //render imageview rather than webview
-           // webView.setVisible(!image);
-            //imageView.setVisible(image);
-
+            webView.setVisible(!image);
+            imageView.setVisible(image);
     }
 
     @Override
