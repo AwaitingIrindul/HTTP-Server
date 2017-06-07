@@ -151,7 +151,11 @@ public class Connection implements Runnable{
             return "applicaton/octet-stream";
         }else if(file.endsWith(".pdf")){
             return "application/pdf";
-        } else {
+        } else if(file.endsWith(".css")){
+            return "text/css";
+        }
+
+        else {
             return "text/plain";
         }
     }
@@ -186,7 +190,7 @@ public class Connection implements Runnable{
 
             //Sending the file :
             BufferedOutputStream outData = new BufferedOutputStream(socket.getOutputStream());
-            outData.write(fileData, 0, fileData.length);
+            outData.write(fileData);
             outData.flush();
             close(outData);
 

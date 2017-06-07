@@ -36,7 +36,7 @@ public class Client implements Runnable {
             pw.println("GET " + url + " HTTP/1.1");
             for (Map.Entry<String, String> entry : cookies.entrySet()) {
                 pw.println("Cookie: " + entry.getKey() + "=" + entry.getValue());
-                System.out.println("Test");
+                System.out.println("Cookie sent");
             }
 
             pw.println();
