@@ -4,7 +4,6 @@
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
@@ -82,8 +81,11 @@ public class Controller extends VBox implements View {
     }
 
     @Override
-    public void notifyError() {
+    public void notifyError(String s) {
+            webView.setVisible(true);
+            imageView.setVisible(false);
 
+            webView.getEngine().loadContent(s);
     }
 
     @Override
@@ -99,13 +101,6 @@ public class Controller extends VBox implements View {
 
     @Override
     public void notifyHeader(boolean image) {
-       /* StringTokenizer tokenizer = new StringTokenizer(header);
-        while(tokenizer.hasMoreTokens()){
-            String s = tokenizer.nextToken();
-            if("Content-Type:".equals(s)){
-                String type = tokenizer.nextToken();
-                isImage = type.contains("image");
-            } */
 
             //render imageview rather than webview
             webView.setVisible(!image);
@@ -119,8 +114,8 @@ public class Controller extends VBox implements View {
             BufferedImage read = ImageIO.read(in);
             imageView.setImage(SwingFXUtils.toFXImage(read, null));
 
-        } catch (IOException e){
-            e.printStackTrace();
+        } catch (Exception e){
+
         }
     }
 }

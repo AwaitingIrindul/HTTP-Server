@@ -1,7 +1,6 @@
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
@@ -58,17 +57,20 @@ public class Client implements Runnable {
             //Reading content according to type
             if (image) {
                 byte[] bytes = new byte[length];
-
                 if (url.startsWith("/")) {
                     url = url.substring(1);
                 }
 
                 try{
                     BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream(), length);
-                    inputStream.read(bytes);
+                    int nbRead = 0;
+                    do{
+                        nbRead += inputStream.read(bytes, nbRead, length-nbRead);
+                    } while (nbRead != length);
+
                     inputStream.close();
-                } catch (IOException e){
-                    System.out.println(e.getMessage());
+                } catch (Exception e){
+                    view.notifyError("Une erreur est survenue " + e.getMessage());
                 }
 
                 try{
@@ -96,8 +98,9 @@ public class Client implements Runnable {
 
             br.close();
             pw.close();
+            socket.close();
         } catch (IOException e) {
-            view.notifyError();
+            view.notifyError("Une erreur est survenue " + e.getMessage());
             System.err.println("Impossible de se connecter à l'adresse " + adr + ":" + port + " : ");
             e.printStackTrace();
         }
@@ -114,6 +117,7 @@ public class Client implements Runnable {
                 image = type.contains("image");
             }
             if ("Content-length:".equals(s)) {
+                
                 String lengthString = parse.nextToken();
                 return Integer.parseInt(lengthString);
             }

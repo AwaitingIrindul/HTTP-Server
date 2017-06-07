@@ -3,7 +3,7 @@
  */
 public interface View {
 
-    void notifyError();
+    void notifyError(String s);
     void notifySuccess(String result);
     void notifyHeader(boolean image);
     void notifySuccess(byte[] result);
