@@ -117,7 +117,7 @@ public class Client implements Runnable {
                 image = type.contains("image");
             }
             if ("Content-length:".equals(s)) {
-                
+
                 String lengthString = parse.nextToken();
                 return Integer.parseInt(lengthString);
             }

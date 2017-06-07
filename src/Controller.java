@@ -84,8 +84,9 @@ public class Controller extends VBox implements View {
     public void notifyError(String s) {
             webView.setVisible(true);
             imageView.setVisible(false);
-
-            webView.getEngine().loadContent(s);
+            Platform.runLater(() ->
+                    webView.getEngine().loadContent(s)
+            );
     }
 
     @Override
